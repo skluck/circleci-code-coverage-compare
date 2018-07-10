@@ -1,0 +1,28 @@
+version: 2
+
+jobs:
+    build:
+        docker:
+            - image: 'circleci/php:7.2'
+        steps:
+            - checkout
+
+            - run: 'composer install'
+            - run: 'vendor/bin/phpunit'
+
+            - run: 'php check-test-coverage.php 50'
+
+            - run: 'echo "${CIRCLE_SHA1}" >> ./current_commit_sha'
+            - save_cache:
+                key: 'v1-unit-test-coverage-{{ checksum "current_sha" }}'
+                paths: [ './coverage' ]
+
+            - run: |
+                mv ./coverage ./current_coverage
+                # get SHA of master branch
+                echo 'master_sha' >> ./master_commit_sha
+
+            - restore_cache:
+                keys: [ 'v1-unit-test-coverage-{{ checksum "master_commit_sha" }}' ]
+
+            - run: 'compare-coverage ./current_coverage ./coverage
