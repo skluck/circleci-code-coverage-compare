@@ -75,6 +75,9 @@ jobs:
                         exit 0
                     fi
 
+                    cat ./coverage
+                    cat ./current_coverage
+
                     current_coverage=$(cat ./current_coverage)
                     required_increase="${REQUIRED_TEST_COVERAGE_INCREASE:-1}"
 
