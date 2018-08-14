@@ -31,7 +31,7 @@ function run_script {
             --commit)
                 commit_sha="$2" ; shift
                 ;;
-            ----commit-file)
+            --commit-file)
                 commit_file="$2" ; shift
                 ;;
             *)
