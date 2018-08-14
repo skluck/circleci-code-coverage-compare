@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="Unit Tests" tests="3" assertions="3" errors="0" failures="0" skipped="0" time="0.017683">
+    <testsuite name="SKluck\CircleCoverage\Class1Test" file="/Users/skluck/Projects/circleci-code-coverage-compare/project/tests/Class1Test.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.014897">
+      <testcase name="testOne" class="SKluck\CircleCoverage\Class1Test" classname="SKluck.CircleCoverage.Class1Test" file="/Users/skluck/Projects/circleci-code-coverage-compare/project/tests/Class1Test.php" line="9" assertions="1" time="0.014897"/>
+    </testsuite>
+    <testsuite name="SKluck\CircleCoverage\Class2Test" file="/Users/skluck/Projects/circleci-code-coverage-compare/project/tests/Class2Test.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.001176">
+      <testcase name="testOne" class="SKluck\CircleCoverage\Class2Test" classname="SKluck.CircleCoverage.Class2Test" file="/Users/skluck/Projects/circleci-code-coverage-compare/project/tests/Class2Test.php" line="9" assertions="1" time="0.001176"/>
+    </testsuite>
+    <testsuite name="SKluck\CircleCoverage\Class3Test" file="/Users/skluck/Projects/circleci-code-coverage-compare/project/tests/Class3Test.php" tests="1" assertions="1" errors="0" failures="0" skipped="0" time="0.001610">
+      <testcase name="testOne" class="SKluck\CircleCoverage\Class3Test" classname="SKluck.CircleCoverage.Class3Test" file="/Users/skluck/Projects/circleci-code-coverage-compare/project/tests/Class3Test.php" line="9" assertions="1" time="0.001610"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

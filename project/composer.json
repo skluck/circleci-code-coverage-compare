@@ -1,0 +1,16 @@
+{
+    "name": "skluck/circleci-code-coverage",
+    "description": "Circle CI Code Coverage Increment",
+
+    "autoload": {
+        "psr-4": { "SKluck\\CircleCoverage\\": "src" }
+    },
+
+    "require": {
+        "php": "~7.1"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "~6.2"
+    }
+}

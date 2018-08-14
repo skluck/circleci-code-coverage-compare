@@ -1,28 +1,78 @@
 version: 2
 
+workflows:
+    version: 2
+
+    pipeline:
+        jobs:
+            - build_and_test
+            - validate_coverage
+                requires: [ build_and_test ]
+
 jobs:
-    build:
-        docker:
-            - image: 'circleci/php:7.2'
+    build_and_test:
+        docker: [ { image: 'circleci/php:7.2' } ]
         steps:
             - checkout
 
-            - run: 'composer install'
-            - run: 'vendor/bin/phpunit'
+            - run: |
+                cd project
+                composer install
+                phpdbg -qrr vendor/bin/phpunit
 
-            - run: 'php check-test-coverage.php 50'
+            - persist_to_workspace: { root: '.', paths: [ '.' ] }
 
-            - run: 'echo "${CIRCLE_SHA1}" >> ./current_commit_sha'
+    validate_coverage:
+        docker: [ { image: 'circleci/php:7.2' } ]
+        environment:
+            - BASE_BRANCH: "master"
+
+        steps:
+            - attach_workspace: { at: '.' }
+
+            - run:
+                name: "Save unit test coverage"
+                command: |
+                    echo "$(php generate-total-coverage.php ./project/clover.xml)" >> ./coverage
+                    echo "${CIRCLE_SHA1}" >> ./current_commit_sha
+
             - save_cache:
-                key: 'v1-unit-test-coverage-{{ checksum "current_sha" }}'
+                key: 'v1-unit-test-coverage-{{ checksum "current_commit_sha" }}'
                 paths: [ './coverage' ]
 
-            - run: |
-                mv ./coverage ./current_coverage
-                # get SHA of master branch
-                echo 'master_sha' >> ./master_commit_sha
+            - run:
+                name: "Get unit test coverage of main branch"
+                command: |
+                    if [ "${CIRCLE_BRANCH}" == "${BASE_BRANCH}" ] ; then
+                        echo "Running on base branch. Skipping unit test coverage comparison."
+                        exit 0
+                    fi
+
+                    main_branch_sha=$(
+                        ./fetch-target-sha.sh \
+                            --user ${CIRCLE_PROJECT_USERNAME} \
+                            --repo ${CIRCLE_PROJECT_REPONAME} \
+                            --branch "${BASE_BRANCH}"
+                        )
+
+                    echo ${main_branch_sha} >> ./master_commit_sha
+                    mv ./coverage ./current_coverage
 
             - restore_cache:
                 keys: [ 'v1-unit-test-coverage-{{ checksum "master_commit_sha" }}' ]
 
-            - run: 'compare-coverage ./current_coverage ./coverage
+            - run:
+                name: "Comparing coverage of current branch against main branch"
+                command: |
+                    if [ "${CIRCLE_BRANCH}" == "${BASE_BRANCH}" ] ; then
+                        echo "Running on base branch. Skipping unit test coverage comparison."
+                        exit 0
+                    fi
+
+                    required_increase="0.5"
+                    expected_coverage=""
+                    if [ -f ./coverage ] ; then
+                        expected_coverage=$(cat ./coverage)
+                    fi
+
+                    compare-coverage.sh ${expected_coverage} $(cat ./current_coverage) ${required_increase}
