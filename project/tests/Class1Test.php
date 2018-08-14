@@ -10,4 +10,8 @@ class Class1Test extends TestCase
     {
         $this->assertSame(1, (new Class1)->one());
     }
+    public function testTwo()
+    {
+        $this->assertSame(2, (new Class1)->two());
+    }
 }
