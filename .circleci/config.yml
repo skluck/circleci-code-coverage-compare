@@ -34,10 +34,11 @@ jobs:
             - run:
                 name: "Save unit test coverage"
                 command: |
-                    echo "$(php generate-total-coverage.php ./project/clover.xml)" >> ./coverage
-                    echo "${CIRCLE_SHA1}" >> ./current_commit_sha
-
-                    echo "Current code coverage: $(cat ./coverage)"
+                    ./generate-total-coverage.sh \
+                        --clover "$(pwd)/project/clover.xml" \
+                        --output "$(pwd)/coverage" \
+                        --commit "${CIRCLE_SHA1}" \
+                        --commit-file "$(pwd)/current_commit_sha"
 
             - save_cache:
                 key: 'v1-unit-test-coverage-{{ checksum "current_commit_sha" }}'
