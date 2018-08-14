@@ -26,6 +26,7 @@ jobs:
         docker: [ { image: 'circleci/php:7.2' } ]
         environment:
             - BASE_BRANCH: "master"
+            # - REQUIRED_TEST_COVERAGE_INCREASE # Set this environment variable in Circle environment variables to make this more dynamic. Default: 1%
 
         steps:
             - attach_workspace: { at: '.' }
@@ -45,6 +46,7 @@ jobs:
                 command: |
                     if [ "${CIRCLE_BRANCH}" == "${BASE_BRANCH}" ] ; then
                         echo "Running on base branch. Skipping unit test coverage comparison."
+                        touch ./master_commit_sha
                         exit 0
                     fi
 
@@ -69,7 +71,7 @@ jobs:
                         exit 0
                     fi
 
-                    required_increase="0.5"
+                    required_increase="${REQUIRED_TEST_COVERAGE_INCREASE:-1}"
                     expected_coverage=""
                     if [ -f ./coverage ] ; then
                         expected_coverage=$(cat ./coverage)
