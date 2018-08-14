@@ -37,6 +37,8 @@ jobs:
                     echo "$(php generate-total-coverage.php ./project/clover.xml)" >> ./coverage
                     echo "${CIRCLE_SHA1}" >> ./current_commit_sha
 
+                    echo "Current code coverage: $(cat ./coverage)"
+
             - save_cache:
                 key: 'v1-unit-test-coverage-{{ checksum "current_commit_sha" }}'
                 paths: [ './coverage' ]
@@ -46,7 +48,7 @@ jobs:
                 command: |
                     if [ "${CIRCLE_BRANCH}" == "${BASE_BRANCH}" ] ; then
                         echo "Running on base branch. Skipping unit test coverage comparison."
-                        touch ./master_commit_sha
+                        touch ./head_commit_sha
                         exit 0
                     fi
 
@@ -57,11 +59,13 @@ jobs:
                             --branch "${BASE_BRANCH}"
                         )
 
-                    echo ${main_branch_sha} >> ./master_commit_sha
+                    echo ${main_branch_sha} >> ./head_commit_sha
                     mv ./coverage ./current_coverage
 
+                    echo "Current SHA of main branch: $(cat ./head_commit_sha)"
+
             - restore_cache:
-                keys: [ 'v1-unit-test-coverage-{{ checksum "master_commit_sha" }}' ]
+                keys: [ 'v1-unit-test-coverage-{{ checksum "head_commit_sha" }}' ]
 
             - run:
                 name: "Comparing coverage of current branch against main branch"
@@ -77,4 +81,4 @@ jobs:
                         expected_coverage=$(cat ./coverage)
                     fi
 
-                    compare-coverage.sh ${expected_coverage} $(cat ./current_coverage) ${required_increase}
+                    ./compare-coverage.sh ${expected_coverage} $(cat ./current_coverage) ${required_increase}
