@@ -34,9 +34,9 @@ comparison=$(echo "${current_coverage} ${expected}" | awk '{print ($1 > $2)}')
 if [ ${comparison} == 1 ] ; then
     echo -n "Total code coverage is ${current_coverage}% which is"
     clrd " above the accepted ${expected}%" 32
-    exit 1
 
 else
     echo -n "Total code coverage is ${current_coverage}% which is"
     clrd " below the accepted ${expected}%" 31
+    exit 1
 fi
