@@ -75,8 +75,8 @@ jobs:
                         exit 0
                     fi
 
-                    cat ./coverage
                     cat ./current_coverage
+                    cat ./coverage
 
                     current_coverage=$(cat ./current_coverage)
                     required_increase="${REQUIRED_TEST_COVERAGE_INCREASE:-1}"
@@ -86,4 +86,4 @@ jobs:
                         head_coverage=$(cat ./coverage)
                     fi
 
-                    ./compare-coverage.sh ${current_coverage} ${head_coverage} ${required_increase}
+                    ./compare-coverage.sh "${current_coverage}" "${head_coverage}" "${required_increase}"
