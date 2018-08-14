@@ -6,7 +6,7 @@ workflows:
     pipeline:
         jobs:
             - build_and_test
-            - validate_coverage
+            - validate_coverage:
                 requires: [ build_and_test ]
 
 jobs:
