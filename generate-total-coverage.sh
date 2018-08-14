@@ -48,17 +48,17 @@ function run_script {
     ensure_not_empty "--commit"         "$commit_sha"
     ensure_not_empty "--commit-file"    "$commit_file"
 
-    echo "Clover XML input file: ${clover_file} -- customize with the [--clover <value>]"
-    echo "Output file: ${output_file} -- customize with the [--output <value>]"
+    echo "Clover XML input file: ${clover_file} -- customize with [--clover <value>]"
+    echo "Output file: ${output_file} -- customize with [--output <value>]"
     echo
 
-    coverage_percent=$(php ./generate-total-coverage.php "${clover_file}")
+    coverage_percent=$(./generate-total-coverage.php "${clover_file}")
     echo "${coverage_percent}" >> ${output_file}
     echo "${commit_sha}"       >> ${commit_file}
 
     echo "Current code coverage: ${coverage_percent}"
-    echo "Current SHA: ${commit_sha} -- customize with the [--commit <value>]"
-    echo "Current SHA written to: ${commit_file} -- customize with the [--commit-file <value>]"
+    echo "Current SHA: ${commit_sha} -- customize with [--commit <value>]"
+    echo "Current SHA written to: ${commit_file} -- customize with [--commit-file <value>]"
     echo
 }
 

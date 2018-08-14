@@ -2,16 +2,14 @@
 <?php
 
 if (!isset($argv[1])) {
-    echo 'Please provide the path to your clover XML test coverage.';
-    echo PHP_EOL;
+    fwrite(STDERR, "Please provide the path to your clover XML test coverage.\n");
     exit(1);
 }
 
 $cloverFile = $argv[1];
 
 if (!file_exists($cloverFile)) {
-    echo 'Missing coverage file in clover format. Expected: ' . $cloverFile;
-    echo PHP_EOL;
+    fwrite(STDERR, "Missing coverage file in clover format. Expected: $cloverFile");
     exit(1);
 }
 
