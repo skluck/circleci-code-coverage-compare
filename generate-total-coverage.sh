@@ -43,8 +43,8 @@ function run_script {
         shift
     done
 
-    ensure_not_empty "--clover"         "$input"
-    ensure_not_empty "--output"         "$output"
+    ensure_not_empty "--clover"         "$clover_file"
+    ensure_not_empty "--output"         "$output_file"
     ensure_not_empty "--commit"         "$commit_sha"
     ensure_not_empty "--commit-file"    "$commit_file"
 
@@ -57,7 +57,8 @@ function run_script {
     echo "${commit_sha}"       >> ${commit_file}
 
     echo "Current code coverage: ${coverage_percent}"
-    echo "Current SHA written to: ${commit_file}"
+    echo "Current SHA: ${commit_sha} -- customize with the [--commit <value>]"
+    echo "Current SHA written to: ${commit_file} -- customize with the [--commit-file <value>]"
     echo
 }
 
