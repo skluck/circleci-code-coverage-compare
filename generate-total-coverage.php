@@ -9,7 +9,7 @@ if (!isset($argv[1])) {
 $cloverFile = $argv[1];
 
 if (!file_exists($cloverFile)) {
-    fwrite(STDERR, "Missing coverage file in clover format. Expected: $cloverFile");
+    fwrite(STDERR, "Missing coverage file in clover format. Expected: $cloverFile\n");
     exit(1);
 }
 
