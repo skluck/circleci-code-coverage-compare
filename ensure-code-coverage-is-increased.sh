@@ -28,14 +28,13 @@ function ensure_not_empty {
   fi
 }
 
-
 function compare_coverage {
     local readonly base_coverage="$1"
     local readonly current_coverage="$2"
     local readonly increment="$3"
 
     expected=$(echo "${base_coverage} + ${increment}" | bc)
-    comparison=$(echo "${current_coverage} ${expected}" | awk '{print ($1 > $2)}')
+    comparison=$(echo "${current_coverage} ${expected}" | awk '{print ($1 >= $2)}')
 
     if [ ${comparison} == 1 ] ; then
         echo -n "Total code coverage is ${current_coverage}% which is"
@@ -46,7 +45,6 @@ function compare_coverage {
         clrd " below the accepted ${expected}%" 31
         exit 1
     fi
-
 }
 
 function run_script {
