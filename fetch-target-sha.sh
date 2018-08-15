@@ -96,6 +96,8 @@ function run_script {
     local gh_user
     local gh_repo
     local main_branch="master"
+    local current_branch
+    local commit_file="$(pwd)/base_commit_sha"
 
     while [[ $# > 0 ]]; do
         local key="$1"
@@ -113,6 +115,12 @@ function run_script {
             --branch)
                 main_branch="$2" ; shift
                 ;;
+            --current-branch)
+                current_branch="$2" ; shift
+                ;;
+            --commit-file)
+                commit_file="$2" ; shift
+                ;;
             *)
                 echo "ERROR: Unrecognized argument: $key"
                 exit 1
@@ -122,19 +130,36 @@ function run_script {
         shift
     done
 
-    ensure_not_empty "--github" "$github_url"
-    ensure_not_empty "--user"   "$gh_user"
-    ensure_not_empty "--repo"   "$gh_repo"
-    ensure_not_empty "--branch" "$main_branch"
+    ensure_not_empty "--github"         "$github_url"
+    ensure_not_empty "--user"           "$gh_user"
+    ensure_not_empty "--repo"           "$gh_repo"
+    ensure_not_empty "--branch"         "$main_branch"
 
-    if [ "${main_branch}" != "api.github.com" ] ; then
+    ensure_not_empty "--current-branch" "$current_branch"
+    ensure_not_empty "--commit-file"    "$commit_file"
+
+    if [ "${github_url}" != "api.github.com" ] ; then
         github_url="${github_url}/api/v3"
+    fi
+
+    if [ "${main_branch}" == "${current_branch}" ] ; then
+        echo "Running on base branch. Skipping unit test coverage comparison."
+        touch ${commit_file}
+        exit 0
     fi
 
     local main_branch_url="https://${github_url}/repos/${gh_user}/${gh_repo}/branches/${main_branch}"
     local local_file="$(pwd)/branch.txt"
 
-    download_sha "${main_branch_url}" "${local_file}"
+    local base_sha=$(download_sha "${main_branch_url}" "${local_file}")
+
+    echo "Base branch SHA: ${base_sha}"
+
+    echo -n "Base branch SHA written to: ${commit_file}"
+    clrd " -- customize with [--commit-file <value>]" 33
+    echo
+
+    echo "${base_sha}" >> ${commit_file}
 }
 
 run_script $@

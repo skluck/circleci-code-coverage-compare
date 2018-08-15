@@ -2,6 +2,13 @@
 
 set -eo pipefail
 
+function clrd() {
+    # 31 = red
+    # 32 = green
+    # 33 = yellow
+    echo -e "\033[${3:-0};$2m$1\033[0m"
+}
+
 function ensure_not_empty {
     local readonly arg_name="$1"
     local readonly arg_value="$2"
@@ -48,8 +55,11 @@ function run_script {
     ensure_not_empty "--commit"         "$commit_sha"
     ensure_not_empty "--commit-file"    "$commit_file"
 
-    echo "Clover XML input file: ${clover_file} -- customize with [--clover <value>]"
-    echo "Output file: ${output_file} -- customize with [--output <value>]"
+    echo -n "Clover XML input file: ${clover_file}"
+    clrd " -- customize with [--clover <value>]" 33
+
+    echo -n "Output file: ${output_file}"
+    clrd " -- customize with [--output <value>]" 33
     echo
 
     coverage_percent=$(./generate-total-coverage.php "${clover_file}")
@@ -57,8 +67,12 @@ function run_script {
     echo "${commit_sha}"       >> ${commit_file}
 
     echo "Current code coverage: ${coverage_percent}"
-    echo "Current SHA: ${commit_sha} -- customize with [--commit <value>]"
-    echo "Current SHA written to: ${commit_file} -- customize with [--commit-file <value>]"
+
+    echo -n "Current SHA: ${commit_sha}"
+    clrd " -- customize with [--commit <value>]" 33
+
+    echo -n "Current SHA written to: ${commit_file}"
+    clrd " -- customize with [--commit-file <value>]" 33
     echo
 }
 

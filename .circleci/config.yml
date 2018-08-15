@@ -47,26 +47,16 @@ jobs:
             - run:
                 name: "Get unit test coverage of main branch"
                 command: |
-                    if [ "${CIRCLE_BRANCH}" == "${BASE_BRANCH}" ] ; then
-                        echo "Running on base branch. Skipping unit test coverage comparison."
-                        touch ./head_commit_sha
-                        exit 0
-                    fi
-
-                    main_branch_sha=$(
-                        ./fetch-target-sha.sh \
-                            --user ${CIRCLE_PROJECT_USERNAME} \
-                            --repo ${CIRCLE_PROJECT_REPONAME} \
-                            --branch "${BASE_BRANCH}"
-                        )
-
-                    echo ${main_branch_sha} >> ./head_commit_sha
                     mv ./coverage ./current_coverage
-
-                    echo "Current SHA of main branch: $(cat ./head_commit_sha)"
+                    ./fetch-target-sha.sh \
+                        --user ${CIRCLE_PROJECT_USERNAME} \
+                        --repo ${CIRCLE_PROJECT_REPONAME} \
+                        --branch "${BASE_BRANCH}" \
+                        --current-branch "${CIRCLE_BRANCH}" \
+                        --commit-file "$(pwd)/base_commit_sha"
 
             - restore_cache:
-                keys: [ 'v1-unit-test-coverage-{{ checksum "head_commit_sha" }}' ]
+                keys: [ 'v1-unit-test-coverage-{{ checksum "base_commit_sha" }}' ]
 
             - run:
                 name: "Comparing coverage of current branch against main branch"
