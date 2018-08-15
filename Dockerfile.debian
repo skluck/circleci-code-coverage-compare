@@ -1,4 +1,18 @@
-FROM php:7.2.8-cli-alpine3.7
+FROM php:7.2.8-cli-stretch
+
+# make Apt non-interactive
+RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci \
+  && echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# https://github.com/circleci/circleci-images/blob/staging/shared/images/Dockerfile-basic.template#L11
+RUN apt-get update \
+  && mkdir -p /usr/share/man/man1 \
+  && apt-get install -y \
+    sudo openssh-client ca-certificates \
+    tar gzip unzip zip bzip2 curl \
+    bc
 
 RUN apk add \
     sudo openssh-client ca-certificates \
