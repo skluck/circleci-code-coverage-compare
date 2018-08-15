@@ -18,6 +18,12 @@ It does this by providing the following functionality:
 
 All values are customizable including the base branch (if using something other than `master`) and the amount code coverage must be increased (may be set to `0` for no increase).
 
+## Example usage
+
+Save code coverage to Circle CI cache | Compare coverage against main branch
+------------------------------------- | ---
+![x](./docs/save-coverage.png)        | ![x](./docs/compare-coverage.png)
+
 ## Example Circle CI configuration
 
 Create a new job that runs after your unit tests.
