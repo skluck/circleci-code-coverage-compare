@@ -51,7 +51,7 @@ jobs:
                     ./fetch-target-sha.sh \
                         --user ${CIRCLE_PROJECT_USERNAME} \
                         --repo ${CIRCLE_PROJECT_REPONAME} \
-                        --branch "${BASE_BRANCH}" \
+                        --base-branch "${BASE_BRANCH}" \
                         --current-branch "${CIRCLE_BRANCH}" \
                         --commit-file "$(pwd)/base_commit_sha"
 
@@ -61,17 +61,8 @@ jobs:
             - run:
                 name: "Comparing coverage of current branch against main branch"
                 command: |
-                    if [ "${CIRCLE_BRANCH}" == "${BASE_BRANCH}" ] ; then
-                        echo "Running on base branch. Skipping unit test coverage comparison."
-                        exit 0
-                    fi
-
-                    current_coverage=$(cat ./current_coverage)
-                    required_increase="${REQUIRED_TEST_COVERAGE_INCREASE:-1}"
-
-                    head_coverage=""
-                    if [ -f ./coverage ] ; then
-                        head_coverage=$(cat ./coverage)
-                    fi
-
-                    ./compare-coverage.sh "${current_coverage}" "${head_coverage}" "${required_increase}"
+                    ./ensure-code-coverage-is-increased.sh \
+                        --base-branch "${BASE_BRANCH}" \
+                        --current-branch "${CIRCLE_BRANCH}" \
+                        --base-coverage "$(cat ./coverage 2>/dev/null || true)" \
+                        --current-coverage "$(cat ./current_coverage)"

@@ -112,7 +112,7 @@ function run_script {
             --github)
                 github_url="$2" ; shift
                 ;;
-            --branch)
+            --base-branch)
                 main_branch="$2" ; shift
                 ;;
             --current-branch)
@@ -133,7 +133,7 @@ function run_script {
     ensure_not_empty "--github"         "$github_url"
     ensure_not_empty "--user"           "$gh_user"
     ensure_not_empty "--repo"           "$gh_repo"
-    ensure_not_empty "--branch"         "$main_branch"
+    ensure_not_empty "--base-branch"    "$main_branch"
 
     ensure_not_empty "--current-branch" "$current_branch"
     ensure_not_empty "--commit-file"    "$commit_file"
