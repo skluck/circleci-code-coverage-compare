@@ -23,7 +23,7 @@ function run_script {
 
         case "$key" in
             --clover)
-                input_file="$2" ; shift
+                clover_file="$2" ; shift
                 ;;
             --output)
                 output_file="$2" ; shift

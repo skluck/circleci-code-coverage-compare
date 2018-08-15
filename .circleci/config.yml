@@ -34,11 +34,6 @@ jobs:
             - run:
                 name: "Save unit test coverage"
                 command: |
-                    pwd
-                    ls -hal
-                    ls -hal project
-                    echo
-                    stat "$(pwd)/project/clover.xml"
                     ./generate-total-coverage.sh \
                         --clover "$(pwd)/project/clover.xml" \
                         --output "$(pwd)/coverage" \
