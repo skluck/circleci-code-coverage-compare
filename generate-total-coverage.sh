@@ -62,7 +62,7 @@ function run_script {
     clrd " -- customize with [--output <value>]" 33
     echo
 
-    coverage_percent=$(./generate-total-coverage.php "${clover_file}")
+    coverage_percent=$(generate-total-coverage.php "${clover_file}")
     echo "${coverage_percent}" >> ${output_file}
     echo "${commit_sha}"       >> ${commit_file}
 
