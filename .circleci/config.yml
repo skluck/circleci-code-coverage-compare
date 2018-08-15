@@ -34,7 +34,7 @@ jobs:
             - run:
                 name: "Save unit test coverage"
                 command: |
-                    ./generate-total-coverage.sh \
+                    generate-total-coverage \
                         --clover "$(pwd)/project/clover.xml" \
                         --output "$(pwd)/coverage" \
                         --commit "${CIRCLE_SHA1}" \
@@ -48,7 +48,7 @@ jobs:
                 name: "Get unit test coverage of main branch"
                 command: |
                     mv ./coverage ./current_coverage
-                    ./fetch-target-sha.sh \
+                    fetch-target-sha \
                         --user ${CIRCLE_PROJECT_USERNAME} \
                         --repo ${CIRCLE_PROJECT_REPONAME} \
                         --base-branch "${BASE_BRANCH}" \
@@ -61,7 +61,7 @@ jobs:
             - run:
                 name: "Comparing coverage of current branch against main branch"
                 command: |
-                    ./ensure-code-coverage-is-increased.sh \
+                    ensure-code-coverage-is-increased \
                         --base-branch "${BASE_BRANCH}" \
                         --current-branch "${CIRCLE_BRANCH}" \
                         --base-coverage "$(cat ./coverage 2>/dev/null || true)" \
