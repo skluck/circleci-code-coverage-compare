@@ -23,7 +23,7 @@ jobs:
             - persist_to_workspace: { root: '.', paths: [ '.' ] }
 
     validate_coverage:
-        docker: [ { image: 'skluck/circleci-required-coverage:latest' } ]
+        docker: [ { image: 'skluck/circleci-required-coverage:1.0-alpine' } ]
         environment:
             - BASE_BRANCH: "master"
             # - REQUIRED_TEST_COVERAGE_INCREASE # Set this environment variable in Circle environment variables to make this more dynamic. Default: 1%
