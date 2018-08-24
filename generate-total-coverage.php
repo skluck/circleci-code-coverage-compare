@@ -14,15 +14,20 @@ if (!file_exists($cloverFile)) {
 }
 
 $xml = new SimpleXMLElement(file_get_contents($cloverFile));
-$metrics = $xml->xpath('//metrics');
 
-$elements   = $coveredElements = 0;
-$statements = $coveredStatements = 0;
-$methods    = $coveredMethods = 0;
+$metrics = $xml->xpath('/coverage/project/metrics');
+if (!$metrics) {
+    // Output may sometimes not include overall project summary
+    $metrics = $xml->xpath('*/package/*/metrics');
+}
+
+$conditionals = $coveredConditionals = 0;
+$statements   = $coveredStatements = 0;
+$methods      = $coveredMethods = 0;
 
 foreach ($metrics as $metric) {
-    $elements        += (int) $metric['elements'];
-    $coveredElements += (int) $metric['coveredelements'];
+    $conditionals        += (int) $metric['conditionals'];
+    $coveredConditionals += (int) $metric['coveredconditionals'];
 
     $statements        += (int) $metric['statements'];
     $coveredStatements += (int) $metric['coveredstatements'];
@@ -33,9 +38,13 @@ foreach ($metrics as $metric) {
 
 // See calculation: https://confluence.atlassian.com/pages/viewpage.action?pageId=79986990
 
-$t        = $statements + $methods + $elements;
-$tCovered = $coveredStatements + $coveredMethods + $coveredElements;
+$tCovered = $coveredConditionals + $coveredStatements + $coveredMethods;
+$t        = $conditionals + $statements + $methods;
 
-$actualCoverage = ($tCovered / $t) * 100;
+if ($tCovered === 0) {
+    $actualCoverage = 0;
+} else {
+    $actualCoverage = ($tCovered / $t) * 100;
+}
 
 echo sprintf('%0.2f', $actualCoverage);
